@@ -8,7 +8,7 @@ public class HuffmanCompression {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         //char endOfFileChar = '§';
-        String inputFile = "The Three Musketeers.txt";
+        String inputFile = "Tom Sawyer.txt";
         String outputFile = inputFile.substring(0, inputFile.length() - 4) + ".justin";
         Scanner scanner = new Scanner(new File(inputFile));
         HashMap<Character, Integer> frequencyHashMap = new HashMap<>();
