@@ -7,13 +7,14 @@ import java.util.Stack;
 public class HuffmanCompression {
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        //char endOfFileChar = '§';
         String inputFile = "Tom Sawyer.txt";
         String outputFile = inputFile.substring(0, inputFile.length() - 4) + ".justin";
+
         Scanner scanner = new Scanner(new File(inputFile));
-        HashMap<Character, Integer> frequencyHashMap = new HashMap<>();
         scanner.useDelimiter("");
+        HashMap<Character, Integer> frequencyHashMap = new HashMap<>();
         ArrayList<Character> keys = new ArrayList<>();
+
         while (scanner.hasNext()){
             char c = scanner.next().charAt(0);
             if (frequencyHashMap.containsKey(c)){
@@ -24,18 +25,19 @@ public class HuffmanCompression {
                 keys.add(c);
             }
         }
-        //System.out.println(frequencyHashMap);
+
+
         ArrayList<Node> huffmanList = new ArrayList<>();
+
         for (int i = 0; i < keys.size(); i++) {
             huffmanList.add(new Node(keys.get(i), frequencyHashMap.get(keys.get(i)), true));
         }
 
 
-
-
         while(huffmanList.size() > 1){
             Node lowestA = huffmanList.get(0);
             Node lowestB = huffmanList.get(1);
+
             for (int i = 2; i < huffmanList.size(); i++) {
                 Node currentNode = huffmanList.get(i);
                 if(currentNode.value < lowestA.value){
@@ -46,6 +48,7 @@ public class HuffmanCompression {
                     lowestB = currentNode;
                 }
             }
+
             huffmanList.remove(lowestA);
             huffmanList.remove(lowestB);
 
@@ -57,26 +60,24 @@ public class HuffmanCompression {
             huffmanList.add(newTree);
         }
 
+
         Node root = huffmanList.get(0);
-
         HashMap<Character, Tuple> encodingTable = new HashMap<>();
-
-
         Stack<Node> nodeStack = new Stack<>();
         nodeStack.push(root);
+
         while (!nodeStack.isEmpty()){
             Node currentNode = nodeStack.pop();
             if(currentNode.isReal){
-                //System.out.println(currentNode.binary);
                 int binaryValue = 0;
                 int count = 0;
+
                 for (int i = currentNode.binary.length() -1; i >= 0; i--) {
                     if(currentNode.binary.charAt(i) == '1'){
                         binaryValue += Math.pow(2, count);
                     }
                     count++;
                 }
-                //System.out.println(currentNode.character +  " " + currentNode.binary.length() + " " +  binaryValue);
                 encodingTable.put(currentNode.character, new Tuple(currentNode.binary.length(), binaryValue));
             }
             else{
@@ -85,8 +86,6 @@ public class HuffmanCompression {
             }
 
         }
-
-
 
 
         BitOutputStream writer = new BitOutputStream(outputFile);
@@ -99,11 +98,6 @@ public class HuffmanCompression {
         }
         writer.close();
 
-
-
-
-
-
         System.out.println("File successfully compressed.");
         System.out.print("Decompress?");
         Scanner pause = new Scanner(System.in);
@@ -113,6 +107,7 @@ public class HuffmanCompression {
         BufferedWriter decompressionWriter = new BufferedWriter(new FileWriter("decompressedFile.txt"));
         Node currentNode = root;
         boolean keepRunning = true;
+
         while(keepRunning){
             int bit = reader.readBits(1);
             if(bit == -1){
@@ -132,14 +127,7 @@ public class HuffmanCompression {
             }
         }
         decompressionWriter.close();
-
-
-
-
-
     }
-
-
 
     private static class Tuple{
         public int a;
@@ -180,7 +168,6 @@ public class HuffmanCompression {
                     nodeStack.push(currentNode.left);
                     nodeStack.push(currentNode.right);
                 }
-
             }
         }
 
@@ -190,7 +177,6 @@ public class HuffmanCompression {
         public boolean hasRight(){
             return right != null;
         }
-
 
     }
 }
